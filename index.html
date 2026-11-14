@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Тренажёр: Единицы измерения информации</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+    }
+    body {
+      background: #f0f4f8;
+      color: #0f172a;
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 24px 16px;
+    }
+    .main-card {
+      background: #ffffff;
+      width: 100%;
+      max-width: 880px;
+      border-radius: 16px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.08);
+      padding: 32px;
+      position: relative;
+    }
+    h1 {
+      font-size: 22px;
+      color: #0f172a;
+      margin-bottom: 20px;
+      text-align: center;
+      font-weight: 700;
+    }
+    .theory-box {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      padding: 20px;
+      margin-bottom: 24px;
+      line-height: 1.8;
+      font-size: 15.5px;
+      color: #334155;
+    }
+    .theory-box strong {
+      color: #0f172a;
+    }
+    .theory-line {
+      margin-bottom: 8px;
+    }
+    .rule-strict {
+      background: #f1f5f9;
+      border-left: 4px solid #0f172a;
+      padding: 12px 16px;
+      border-radius: 4px;
+      font-size: 14.5px;
+      color: #0f172a;
+      margin-top: 14px;
+      line-height: 1.6;
+    }
+    .btn {
+      background: #2563eb;
+      color: #ffffff;
+      border: none;
+      border-radius: 8px;
+      padding: 12px 28px;
+      font-size: 15px;
+      font-weight: 700;
+      cursor: pointer;
+      display: inline-block;
+      transition: background 0.2s, transform 0.1s;
+      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+    }
+    .btn:hover {
+      background: #1d4ed8;
+    }
+    .btn:active {
+      transform: scale(0.98);
+    }
+    .header-step {
+      display: flex;
+      justify-content: space-between;
+      color: #64748b;
+      font-size: 13px;
+      font-weight: 700;
+      margin-bottom: 8px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .progress-bar-container {
+      width: 100%;
+      height: 6px;
+      background: #e2e8f0;
+      border-radius: 3px;
+      margin-bottom: 24px;
+      overflow: hidden;
+    }
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: #2563eb;
+      transition: width 0.3s ease;
+    }
+    .step-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #0f172a;
+      margin-bottom: 6px;
+    }
+    .step-desc {
+      font-size: 14.5px;
+      color: #64748b;
+      margin-bottom: 20px;
+    }
+    .tasks-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 24px;
+    }
+    .task-row {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #f8fafc;
+      border: 1px solid #e2e8f0;
+      padding: 12px 16px;
+      border-radius: 8px;
+      font-size: 15.5px;
+      color: #0f172a;
+      flex-wrap: wrap;
+    }
+    .num-input {
+      padding: 6px 10px;
+      border: 2px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 15px;
+      font-weight: 600;
+      text-align: center;
+      outline: none;
+      transition: border-color 0.2s, background-color 0.2s;
+    }
+    .num-input:focus {
+      border-color: #2563eb;
+    }
+    .num-input.correct {
+      border-color: #22c55e !important;
+      background: #dcfce7 !important;
+      color: #15803d !important;
+    }
+    .num-input.wrong {
+      border-color: #ef4444 !important;
+      background: #fee2e2 !important;
+      color: #b91c1c !important;
+    }
+    select.unit-select {
+      padding: 6px 10px;
+      border: 2px solid #cbd5e1;
+      border-radius: 6px;
+      font-size: 15px;
+      font-weight: 600;
+      outline: none;
+      background: #ffffff;
+      transition: border-color 0.2s;
+    }
+    select.unit-select.correct {
+      border-color: #22c55e !important;
+      background: #dcfce7 !important;
+      color: #15803d !important;
+    }
+    select.unit-select.wrong {
+      border-color: #ef4444 !important;
+      background: #fee2e2 !important;
+      color: #b91c1c !important;
+    }
+
+    /* СХЕМЫ С ФИГУРНЫМИ СКОБКАМИ */
+    .scheme-wrapper {
+      background: #f8fafc;
+      border: 1px solid #cbd5e1;
+      border-radius: 12px;
+      padding: 20px;
+      margin-bottom: 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 22px;
+    }
+    .scheme-block {
+      background: #ffffff;
+      border: 1px solid #e2e8f0;
+      border-radius: 10px;
+      padding: 16px 18px;
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+    }
+    .unit-main {
+      background: #eff6ff;
+      border: 2px solid #2563eb;
+      color: #1e3a8a;
+      font-weight: 800;
+      font-size: 16px;
+      padding: 10px 16px;
+      border-radius: 8px;
+      white-space: nowrap;
+    }
+    .eq-sign {
+      font-size: 20px;
+      font-weight: 800;
+      color: #334155;
+    }
+    .brace-group {
+      display: inline-flex;
+      flex-direction: column;
+      align-items: center;
+    }
+    .squares-row {
+      display: flex;
+      align-items: center;
+      gap: 5px;
+      flex-wrap: wrap;
+    }
+    .bit-sq {
+      width: 44px;
+      height: 44px;
+      background: #fef3c7;
+      border: 2px solid #d97706;
+      color: #92400e;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 12px;
+      font-weight: 700;
+    }
+    .byte-sq {
+      height: 40px;
+      padding: 0 10px;
+      background: #dcfce7;
+      border: 2px solid #16a34a;
+      color: #14532d;
+      border-radius: 6px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      white-space: nowrap;
+    }
+    .plus-sign {
+      font-weight: 800;
+      color: #475569;
+      font-size: 15px;
+    }
+    .brace-svg {
+      width: 100%;
+      height: 18px;
+      display: block;
+      margin-top: 2px;
+    }
+    .brace-caption {
+      font-size: 14px;
+      font-weight: 800;
+      color: #0f172a;
+      margin-top: 2px;
+    }
+
+    /* Стили перетаскивания (Drag & Drop) */
+    .drag-list {
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+      width: 100%;
+      max-width: 440px;
+      margin: 0 auto;
+    }
+    .drag-item {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: #ffffff;
+      border: 2px solid #cbd5e1;
+      border-radius: 8px;
+      padding: 12px 16px;
+      font-size: 15px;
+      font-weight: 600;
+      color: #1e293b;
+      cursor: grab;
+      user-select: none;
+      transition: transform 0.15s, border-color 0.2s, background-color 0.2s;
+    }
+    .drag-item:active {
+      cursor: grabbing;
+    }
+    .drag-item.dragging {
+      opacity: 0.4;
+      background: #f1f5f9;
+      border-style: dashed;
+    }
+    .drag-item.over {
+      border-color: #2563eb;
+      transform: scale(1.02);
+    }
+    .drag-item.correct {
+      border-color: #22c55e !important;
+      background: #dcfce7 !important;
+      color: #15803d !important;
+    }
+    .drag-item.wrong {
+      border-color: #ef4444 !important;
+      background: #fee2e2 !important;
+      color: #b91c1c !important;
+    }
+    .drag-handle {
+      color: #94a3b8;
+      font-size: 18px;
+      cursor: grab;
+    }
+
+    .status-label {
+      font-size: 13.5px;
+      font-weight: 700;
+      margin-left: 8px;
+    }
+    .status-label.correct {
+      color: #15803d;
+    }
+    .status-label.wrong {
+      color: #b91c1c;
+    }
+
+    .actions-footer {
+      display: flex;
+      justify-content: flex-end;
+      gap: 12px;
+    }
+
+    /* ИТОГОВЫЙ ЭКРАН */
+    .result-screen {
+      text-align: center;
+      display: none;
+      padding: 10px 0;
+    }
+    .result-screen h2 {
+      font-size: 24px;
+      font-weight: 800;
+      color: #1e293b;
+      margin-bottom: 8px;
+    }
+    .result-score {
+      font-size: 48px;
+      font-weight: 800;
+      color: #1e293b;
+      margin: 14px 0;
+    }
+    .result-msg {
+      font-size: 15px;
+      color: #475569;
+      margin-bottom: 24px;
+      line-height: 1.5;
+    }
+    .results-badges {
+      display: flex;
+      flex-wrap: wrap;
+      justify-content: center;
+      gap: 10px;
+      margin: 16px 0 32px 0;
+    }
+    .badge-item {
+      width: 48px;
+      height: 48px;
+      border-radius: 10px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 14px;
+      cursor: pointer;
+      transition: transform 0.15s, box-shadow 0.15s;
+    }
+    .badge-item:hover {
+      transform: scale(1.08);
+    }
+    .badge-item.correct {
+      background: #dcfce7;
+      color: #15803d;
+      border: 2px solid #22c55e;
+    }
+    .badge-item.partial {
+      background: #fef9c3;
+      color: #854d0e;
+      border: 2px solid #eab308;
+    }
+    .badge-item.wrong {
+      background: #fee2e2;
+      color: #b91c1c;
+      border: 2px solid #ef4444;
+    }
+  </style>
+</head>
+<body>
+
+<div class="main-card">
+  <!-- ТЕОРИЯ (НА СТАРТЕ) -->
+  <div id="theory-screen">
+    <h1>Памятка: Единицы измерения информации</h1>
+    
+    <div class="theory-box">
+      <div class="theory-line"><strong>1 Байт = 8 Бит</strong></div>
+      <div class="theory-line"><strong>1 КБ (килобайт) = 1024 Байт</strong></div>
+      <div class="theory-line"><strong>1 МБ (мегабайт) = 1024 КБ = 1024 * 1024 Байт</strong></div>
+      <div class="theory-line"><strong>1 ГБ (гигабайт) = 1024 МБ = 1024 * 1024 КБ = 1024 * 1024 * 1024 Байт</strong></div>
+      <div class="theory-line"><strong>1 ТБ (терабайт) = 1024 ГБ = 1024 * 1024 МБ = 1024 * 1024 * 1024 КБ = 1024 * 1024 * 1024 * 1024 Байт</strong></div>
+      
+      <div class="rule-strict">
+        <strong>Правило перевода:</strong><br>
+        1. Перевод из <strong>большей</strong> единицы в <strong>меньшую</strong> (Байт → Бит, КБ → Байт, МБ → КБ) — <strong>УМНОЖАЕМ</strong>.<br>
+        2. Перевод из <strong>меньшей</strong> единицы в <strong>большую</strong> (Бит → Байт, Байт → КБ, КБ → МБ) — <strong>ДЕЛИМ</strong>.<br>
+             </div>
+    </div>
+
+    <div style="text-align: center;">
+      <button class="btn" onclick="startTrainer()">Начать задания</button>
+    </div>
+  </div>
+
+  <!-- ЭКРАН ТЕСТА -->
+  <div id="quiz-screen" style="display: none;">
+    <div class="header-step">
+      <span id="step-counter">Задание 1 из 12</span>
+      <span id="score-counter">Баллы: 0 / 12</span>
+    </div>
+    <div class="progress-bar-container">
+      <div class="progress-bar" id="progress"></div>
+    </div>
+
+    <div class="step-title" id="step-title"></div>
+    <div class="step-desc" id="step-desc"></div>
+
+    <div class="tasks-list" id="tasks-list"></div>
+
+    <div class="actions-footer">
+      <button class="btn" id="btn-check" onclick="checkCurrentStep()">Проверить</button>
+      <button class="btn" id="btn-next" style="display: none;" onclick="goToNextStep()">Следующее задание ➔</button>
+    </div>
+  </div>
+
+  <!-- РЕЗУЛЬТАТЫ -->
+  <div class="result-screen" id="result-screen">
+    <h2>Тестирование завершено</h2>
+    <div class="result-score" id="final-score">0 / 12</div>
+    <p class="result-msg" id="final-message"></p>
+
+    <div style="font-weight: 600; color: #334155; margin-bottom: 12px; font-size: 15px;">Результаты по заданиям:</div>
+    <div class="results-badges" id="results-badges"></div>
+
+    <button class="btn" onclick="restart()">Пройти повторно</button>
+  </div>
+</div>
+
+<script>
+const stageBanks = [
+  // 1. Байты в биты (включая кратные 8)
+  {
+    title: "Задание 1",
+    desc: "Переведи Байты в Биты:",
+    type: "simple",
+    variants: [
+      [
+        { prefix: "2 Байт =", answer: "16", suffix: "Бит" },
+        { prefix: "8 Байт =", answer: "64", suffix: "Бит" },
+        { prefix: "7 Байт =", answer: "56", suffix: "Бит" },
+        { prefix: "16 Байт =", answer: "128", suffix: "Бит" }
+      ],
+      [
+        { prefix: "3 Байт =", answer: "24", suffix: "Бит" },
+        { prefix: "16 Байт =", answer: "128", suffix: "Бит" },
+        { prefix: "6 Байт =", answer: "48", suffix: "Бит" },
+        { prefix: "24 Байт =", answer: "192", suffix: "Бит" }
+      ],
+      [
+        { prefix: "4 Байт =", answer: "32", suffix: "Бит" },
+        { prefix: "16 Байт =", answer: "128", suffix: "Бит" },
+        { prefix: "8 Байт =", answer: "64", suffix: "Бит" },
+        { prefix: "11 Байт =", answer: "88", suffix: "Бит" }
+      ]
+    ]
+  },
+
+  // 2. Биты в байты
+  {
+    title: "Задание 2",
+    desc: "Переведи Биты в Байты:",
+    type: "simple",
+    variants: [
+      [
+        { prefix: "24 Бит =", answer: "3", suffix: "Байт" },
+        { prefix: "40 Бит =", answer: "5", suffix: "Байт" },
+        { prefix: "64 Бит =", answer: "8", suffix: "Байт" },
+        { prefix: "96 Бит =", answer: "12", suffix: "Байт" }
+      ],
+      [
+        { prefix: "16 Бит =", answer: "2", suffix: "Байт" },
+        { prefix: "32 Бит =", answer: "4", suffix: "Байт" },
+        { prefix: "56 Бит =", answer: "7", suffix: "Байт" },
+        { prefix: "80 Бит =", answer: "10", suffix: "Байт" }
+      ],
+      [
+        { prefix: "48 Бит =", answer: "6", suffix: "Байт" },
+        { prefix: "72 Бит =", answer: "9", suffix: "Байт" },
+        { prefix: "88 Бит =", answer: "11", suffix: "Байт" },
+        { prefix: "104 Бит =", answer: "13", suffix: "Байт" }
+      ]
+    ]
+  },
+
+  // 3. Схема состава единиц с фигурными скобками и проверочные примеры
+  {
+    title: "Задание 3",
+    desc: "Изучи схемы разложения единиц измерения и выполни задания ниже (можно записывать произведением через * или числом):",
+    type: "visual-scheme",
+    variants: [
+      [
+        { prefix: "1 Байт =", answer: ["8"], suffix: "Бит", width: "90px" },
+        { prefix: "1 КБ =", answer: ["1024"], suffix: "Байт", width: "100px" },
+        { prefix: "1024 КБ =", answer: ["1024*1024", "1048576"], suffix: "Байт", width: "160px" },
+        { prefix: "2048 МБ =", answer: ["2048*1024", "1024*2048", "2097152"], suffix: "КБ", width: "160px" }
+      ],
+      [
+        { prefix: "1 КБ =", answer: ["1024"], suffix: "Байт", width: "100px" },
+        { prefix: "1 МБ =", answer: ["1024"], suffix: "КБ", width: "100px" },
+        { prefix: "2048 КБ =", answer: ["2048*1024", "1024*2048", "2097152"], suffix: "Байт", width: "160px" },
+        { prefix: "1024 МБ =", answer: ["1024*1024", "1048576"], suffix: "КБ", width: "160px" }
+      ]
+    ]
+  },
+
+  // 4. Возрастание
+  {
+    title: "Задание 4",
+    desc: "Перетаскивай карточки вверх или вниз, чтобы выстроить их по возрастанию (сверху самая маленькая, снизу самая большая):",
+    type: "drag-order",
+    variants: [
+      {
+        items: [
+          { id: "kb", label: "КБ" },
+          { id: "bit", label: "Бит" },
+          { id: "gb", label: "ГБ" },
+          { id: "byte", label: "Байт" },
+          { id: "mb", label: "МБ" }
+        ],
+        correctOrder: ["bit", "byte", "kb", "mb", "gb"]
+      },
+      {
+        items: [
+          { id: "gb", label: "ГБ" },
+          { id: "mb", label: "МБ" },
+          { id: "bit", label: "Бит" },
+          { id: "kb", label: "КБ" },
+          { id: "byte", label: "Байт" }
+        ],
+        correctOrder: ["bit", "byte", "kb", "mb", "gb"]
+      },
+      {
+        items: [
+          { id: "byte", label: "Байт" },
+          { id: "gb", label: "ГБ" },
+          { id: "bit", label: "Бит" },
+          { id: "mb", label: "МБ" },
+          { id: "kb", label: "КБ" }
+        ],
+        correctOrder: ["bit", "byte", "kb", "mb", "gb"]
+      }
+    ]
+  },
+
+  // 5. Убывание
+  {
+    title: "Задание 5",
+    desc: "Перетаскивай карточки вверх или вниз, чтобы выстроить их по убыванию (сверху самая большая, снизу самая маленькая):",
+    type: "drag-order",
+    variants: [
+      {
+        items: [
+          { id: "byte", label: "Байт" },
+          { id: "tb", label: "ТБ" },
+          { id: "mb", label: "МБ" },
+          { id: "bit", label: "Бит" },
+          { id: "gb", label: "ГБ" }
+        ],
+        correctOrder: ["tb", "gb", "mb", "byte", "bit"]
+      },
+      {
+        items: [
+          { id: "bit", label: "Бит" },
+          { id: "gb", label: "ГБ" },
+          { id: "tb", label: "ТБ" },
+          { id: "byte", label: "Байт" },
+          { id: "mb", label: "МБ" }
+        ],
+        correctOrder: ["tb", "gb", "mb", "byte", "bit"]
+      },
+      {
+        items: [
+          { id: "mb", label: "МБ" },
+          { id: "bit", label: "Бит" },
+          { id: "tb", label: "ТБ" },
+          { id: "byte", label: "Байт" },
+          { id: "gb", label: "ГБ" }
+        ],
+        correctOrder: ["tb", "gb", "mb", "byte", "bit"]
+      }
+    ]
+  },
+
+  // 6. Выпадающий список
+  {
+    title: "Задание 6",
+    desc: "Выбери подходящую единицу измерения из списка:",
+    type: "select",
+    variants: [
+      [
+        { prefix: "1 КБ = 1024", answer: "Байт", options: ["Бит", "Байт", "КБ", "МБ", "ГБ", "ТБ"] },
+        { prefix: "1 МБ = 1024", answer: "КБ", options: ["Бит", "Байт", "КБ", "МБ", "ГБ", "ТБ"] },
+        { prefix: "1 ГБ = 1024", answer: "МБ", options: ["Бит", "Байт", "КБ", "МБ", "ГБ", "ТБ"] },
+        { prefix: "1 ТБ = 1024", answer: "ГБ", options: ["Бит", "Байт", "КБ", "МБ", "ГБ", "ТБ"] }
+      ]
+    ]
+  },
+
+  // 7. Цепочки через 1024*1024
+  {
+    title: "Задание 7",
+    desc: "Заполни недостающие звенья произведениями (например: 1024*1024):",
+    type: "simple",
+    variants: [
+      [
+        { prefix: "1 МБ = 1024 КБ =", answer: ["1024*1024", "1024 * 1024"], suffix: "Байт", width: "150px" },
+        { prefix: "1 ГБ = 1024 МБ = 1024*1024 КБ =", answer: ["1024*1024*1024", "1024 * 1024 * 1024"], suffix: "Байт", width: "210px" },
+        { prefix: "1 ТБ = 1024 ГБ = 1024*1024 МБ = 1024*1024*1024 КБ =", answer: ["1024*1024*1024*1024", "1024 * 1024 * 1024 * 1024"], suffix: "Байт", width: "270px" }
+      ]
+    ]
+  },
+
+  // 8. Простые вычисления
+  {
+    title: "Задание 8",
+    desc: "Впиши результат вычислений:",
+    type: "simple",
+    variants: [
+      [
+        { prefix: "2 КБ =", answer: "2048", suffix: "Байт", width: "120px" },
+        { prefix: "3 МБ =", answer: "3072", suffix: "КБ", width: "120px" },
+        { prefix: "5 ГБ =", answer: "5120", suffix: "МБ", width: "120px" }
+      ],
+      [
+        { prefix: "3 КБ =", answer: "3072", suffix: "Байт", width: "120px" },
+        { prefix: "4 МБ =", answer: "4096", suffix: "КБ", width: "120px" },
+        { prefix: "2 ГБ =", answer: "2048", suffix: "МБ", width: "120px" }
+      ],
+      [
+        { prefix: "5 КБ =", answer: "5120", suffix: "Байт", width: "120px" },
+        { prefix: "2 МБ =", answer: "2048", suffix: "КБ", width: "120px" },
+        { prefix: "4 ГБ =", answer: "4096", suffix: "МБ", width: "120px" }
+      ]
+    ]
+  },
+
+  // 9. Перевод в Бит
+  {
+    title: "Задание 9",
+    desc: "Переведи все значения в Бит (можно записывать числом или произведением через *):",
+    type: "simple",
+    variants: [
+      [
+        { prefix: "3 Байт =", answer: ["24"], suffix: "Бит", width: "120px" },
+        { prefix: "1 КБ =", answer: ["8192", "1024*8", "8*1024"], suffix: "Бит", width: "160px" },
+        { prefix: "2 КБ =", answer: ["16384", "2*1024*8", "2048*8"], suffix: "Бит", width: "170px" },
+        { prefix: "1 МБ =", answer: ["1024*1024*8", "8*1024*1024", "8388608"], suffix: "Бит", width: "200px" },
+        { prefix: "1 ГБ =", answer: ["1024*1024*1024*8", "8*1024*1024*1024"], suffix: "Бит", width: "240px" },
+        { prefix: "1 ТБ =", answer: ["1024*1024*1024*1024*8", "8*1024*1024*1024*1024"], suffix: "Бит", width: "270px" }
+      ],
+      [
+        { prefix: "5 Байт =", answer: ["40"], suffix: "Бит", width: "120px" },
+        { prefix: "1 КБ =", answer: ["8192", "1024*8", "8*1024"], suffix: "Бит", width: "160px" },
+        { prefix: "4 КБ =", answer: ["32768", "4*1024*8", "4096*8"], suffix: "Бит", width: "170px" },
+        { prefix: "1 МБ =", answer: ["1024*1024*8", "8*1024*1024", "8388608"], suffix: "Бит", width: "200px" },
+        { prefix: "1 ГБ =", answer: ["1024*1024*1024*8", "8*1024*1024*1024"], suffix: "Бит", width: "240px" },
+        { prefix: "1 ТБ =", answer: ["1024*1024*1024*1024*8", "8*1024*1024*1024*1024"], suffix: "Бит", width: "270px" }
+      ],
+      [
+        { prefix: "6 Байт =", answer: ["48"], suffix: "Бит", width: "120px" },
+        { prefix: "1 КБ =", answer: ["8192", "1024*8", "8*1024"], suffix: "Бит", width: "160px" },
+        { prefix: "3 КБ =", answer: ["24576", "3*1024*8", "3072*8"], suffix: "Бит", width: "170px" },
+        { prefix: "1 МБ =", answer: ["1024*1024*8", "8*1024*1024", "8388608"], suffix: "Бит", width: "200px" },
+        { prefix: "1 ГБ =", answer: ["1024*1024*1024*8", "8*1024*1024*1024"], suffix: "Бит", width: "240px" },
+        { prefix: "1 ТБ =", answer: ["1024*1024*1024*1024*8", "8*1024*1024*1024*1024"], suffix: "Бит", width: "270px" }
+      ]
+    ]
+  },
+
+  // 10. Перевод в Байт
+  {
+    title: "Задание 10",
+    desc: "Переведи все значения в Байт (можно записывать числом или произведением через *):",
+    type: "simple",
+    variants: [
+      [
+        { prefix: "32 Бит =", answer: ["4"], suffix: "Байт", width: "120px" },
+        { prefix: "3 КБ =", answer: ["3072", "3*1024"], suffix: "Байт", width: "140px" },
+        { prefix: "1 МБ =", answer: ["1024*1024", "1048576"], suffix: "Байт", width: "170px" },
+        { prefix: "2 МБ =", answer: ["2*1024*1024", "2097152"], suffix: "Байт", width: "180px" },
+        { prefix: "1 ГБ =", answer: ["1024*1024*1024"], suffix: "Байт", width: "220px" },
+        { prefix: "1 ТБ =", answer: ["1024*1024*1024*1024"], suffix: "Байт", width: "250px" }
+      ],
+      [
+        { prefix: "48 Бит =", answer: ["6"], suffix: "Байт", width: "120px" },
+        { prefix: "2 КБ =", answer: ["2048", "2*1024"], suffix: "Байт", width: "140px" },
+        { prefix: "1 МБ =", answer: ["1024*1024", "1048576"], suffix: "Байт", width: "170px" },
+        { prefix: "3 МБ =", answer: ["3*1024*1024", "3145728"], suffix: "Байт", width: "180px" },
+        { prefix: "1 ГБ =", answer: ["1024*1024*1024"], suffix: "Байт", width: "220px" },
+        { prefix: "1 ТБ =", answer: ["1024*1024*1024*1024"], suffix: "Байт", width: "250px" }
+      ],
+      [
+        { prefix: "64 Бит =", answer: ["8"], suffix: "Байт", width: "120px" },
+        { prefix: "5 КБ =", answer: ["5120", "5*1024"], suffix: "Байт", width: "140px" },
+        { prefix: "1 МБ =", answer: ["1024*1024", "1048576"], suffix: "Байт", width: "170px" },
+        { prefix: "4 МБ =", answer: ["4*1024*1024", "4194304"], suffix: "Байт", width: "180px" },
+        { prefix: "1 ГБ =", answer: ["1024*1024*1024"], suffix: "Байт", width: "220px" },
+        { prefix: "1 ТБ =", answer: ["1024*1024*1024*1024"], suffix: "Байт", width: "250px" }
+      ]
+    ]
+  },
+
+  // 11. Перевод в КБ
+  {
+    title: "Задание 11",
+    desc: "Переведи все значения в КБ (можно записывать числом или произведением через *):",
+    type: "simple",
+    variants: [
+      [
+        { prefix: "8192 Бит =", answer: ["1"], suffix: "КБ", width: "120px" },
+        { prefix: "2048 Байт =", answer: ["2"], suffix: "КБ", width: "120px" },
+        { prefix: "4 МБ =", answer: ["4096", "4*1024"], suffix: "КБ", width: "140px" },
+        { prefix: "1 ГБ =", answer: ["1024*1024", "1048576"], suffix: "КБ", width: "170px" },
+        { prefix: "2 ГБ =", answer: ["2*1024*1024", "2097152"], suffix: "КБ", width: "180px" },
+        { prefix: "1 ТБ =", answer: ["1024*1024*1024"], suffix: "КБ", width: "220px" }
+      ],
+      [
+        { prefix: "16384 Бит =", answer: ["2"], suffix: "КБ", width: "120px" },
+        { prefix: "3072 Байт =", answer: ["3"], suffix: "КБ", width: "120px" },
+        { prefix: "2 МБ =", answer: ["2048", "2*1024"], suffix: "КБ", width: "140px" },
+        { prefix: "1 ГБ =", answer: ["1024*1024", "1048576"], suffix: "КБ", width: "170px" },
+        { prefix: "3 ГБ =", answer: ["3*1024*1024", "3145728"], suffix: "КБ", width: "180px" },
+        { prefix: "1 ТБ =", answer: ["1024*1024*1024"], suffix: "КБ", width: "220px" }
+      ],
+      [
+        { prefix: "24576 Бит =", answer: ["3"], suffix: "КБ", width: "120px" },
+        { prefix: "4096 Байт =", answer: ["4"], suffix: "КБ", width: "120px" },
+        { prefix: "5 МБ =", answer: ["5120", "5*1024"], suffix: "КБ", width: "140px" },
+        { prefix: "1 ГБ =", answer: ["1024*1024", "1048576"], suffix: "КБ", width: "170px" },
+        { prefix: "4 ГБ =", answer: ["4*1024*1024", "4194304"], suffix: "КБ", width: "180px" },
+        { prefix: "1 ТБ =", answer: ["1024*1024*1024"], suffix: "КБ", width: "220px" }
+      ]
+    ]
+  },
+
+  // 12. Перемешанные примеры с провокационными числами
+  {
+    title: "Задание 12",
+    desc: "Смешанные задания на внимательность (можно записывать числом или произведением через *):",
+    type: "simple",
+    variants: [
+      [
+        { prefix: "16 Байт =", answer: ["128", "16*8", "8*16"], suffix: "Бит", width: "150px" },
+        { prefix: "1024 КБ =", answer: ["1024*1024", "1048576"], suffix: "Байт", width: "160px" },
+        { prefix: "16 Бит =", answer: ["2"], suffix: "Байт", width: "120px" },
+        { prefix: "2048 МБ =", answer: ["2048*1024", "1024*2048", "2097152"], suffix: "КБ", width: "160px" },
+        { prefix: "1024 Байт =", answer: ["1"], suffix: "КБ", width: "120px" },
+        { prefix: "24 Байт =", answer: ["192", "24*8", "8*24"], suffix: "Бит", width: "150px" },
+        { prefix: "2048 КБ =", answer: ["2"], suffix: "МБ", width: "120px" }
+      ],
+      [
+        { prefix: "1024 МБ =", answer: ["1024*1024", "1048576"], suffix: "КБ", width: "160px" },
+        { prefix: "8 Байт =", answer: ["64", "8*8"], suffix: "Бит", width: "140px" },
+        { prefix: "2048 Байт =", answer: ["2"], suffix: "КБ", width: "120px" },
+        { prefix: "2048 КБ =", answer: ["2048*1024", "1024*2048", "2097152"], suffix: "Байт", width: "160px" },
+        { prefix: "32 Бит =", answer: ["4"], suffix: "Байт", width: "120px" },
+        { prefix: "16 Байт =", answer: ["128", "16*8", "8*16"], suffix: "Бит", width: "150px" },
+        { prefix: "1024 КБ =", answer: ["1"], suffix: "МБ", width: "120px" }
+      ],
+      [
+        { prefix: "32 Байт =", answer: ["256", "32*8", "8*32"], suffix: "Бит", width: "150px" },
+        { prefix: "2048 МБ =", answer: ["2048*1024", "1024*2048", "2097152"], suffix: "КБ", width: "160px" },
+        { prefix: "8 Бит =", answer: ["1"], suffix: "Байт", width: "120px" },
+        { prefix: "1024 КБ =", answer: ["1024*1024", "1048576"], suffix: "Байт", width: "160px" },
+        { prefix: "2048 КБ =", answer: ["2"], suffix: "МБ", width: "120px" },
+        { prefix: "16 Байт =", answer: ["128", "16*8", "8*16"], suffix: "Бит", width: "150px" },
+        { prefix: "1024 Байт =", answer: ["1"], suffix: "КБ", width: "120px" }
+      ]
+    ]
+  }
+];
+
+let stages = [];
+let currentStep = 0;
+let taskStates = [];
+
+function pickRandom(arr) {
+  return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function buildStages() {
+  stages = stageBanks.map(stageBank => {
+    const selectedVariant = pickRandom(stageBank.variants);
+    if (stageBank.type === 'drag-order') {
+      return {
+        title: stageBank.title,
+        desc: stageBank.desc,
+        type: stageBank.type,
+        items: [...selectedVariant.items],
+        correctOrder: [...selectedVariant.correctOrder]
+      };
+    } else {
+      return {
+        title: stageBank.title,
+        desc: stageBank.desc,
+        type: stageBank.type,
+        tasks: JSON.parse(JSON.stringify(selectedVariant))
+      };
+    }
+  });
+
+  taskStates = stages.map(() => ({ errors: 0, completed: false, score: 0 }));
+}
+
+function calculateTotalScore() {
+  let sum = 0;
+  taskStates.forEach(st => {
+    sum += st.score;
+  });
+  return sum;
+}
+
+function updateScoreHeader() {
+  const total = calculateTotalScore();
+  const displayScore = Number.isInteger(total) ? total : total.toFixed(1);
+  document.getElementById('score-counter').innerText = `Баллы: ${displayScore} / ${stages.length}`;
+}
+
+function startTrainer() {
+  buildStages();
+  document.getElementById('theory-screen').style.display = 'none';
+  document.getElementById('quiz-screen').style.display = 'block';
+  currentStep = 0;
+  updateScoreHeader();
+  renderStep();
+}
+
+function getBraceSvg() {
+  return `
+    <svg class="brace-svg" viewBox="0 0 200 18" preserveAspectRatio="none">
+      <path d="M 2 2 C 2 10, 8 10, 20 10 L 90 10 C 97 10, 100 13, 100 17 C 100 13, 103 10, 110 10 L 180 10 C 192 10, 198 10, 198 2"
+            fill="none" stroke="#0f172a" stroke-width="2" stroke-linecap="round"/>
+    </svg>
+  `;
+}
+
+function renderVisualSchemes(container) {
+  const wrapper = document.createElement('div');
+  wrapper.className = 'scheme-wrapper';
+
+  const bitSquaresHtml = Array.from({ length: 8 }, () => `<div class="bit-sq">1 бит</div>`).join('');
+
+  wrapper.innerHTML = `
+    <div class="scheme-block">
+      <div class="unit-main">1 Байт</div>
+      <div class="eq-sign">=</div>
+      <div class="brace-group">
+        <div class="squares-row">
+          ${bitSquaresHtml}
+        </div>
+        ${getBraceSvg()}
+        <div class="brace-caption">8 бит</div>
+      </div>
+    </div>
+
+    <div class="scheme-block">
+      <div class="unit-main">1 КБ</div>
+      <div class="eq-sign">=</div>
+      <div class="brace-group">
+        <div class="squares-row">
+          <div class="byte-sq">1 байт</div>
+          <span class="plus-sign">+</span>
+          <div class="byte-sq">1 байт</div>
+          <span class="plus-sign">+</span>
+          <div class="byte-sq">1 байт</div>
+          <span class="plus-sign">+ ... +</span>
+          <div class="byte-sq">1 байт</div>
+        </div>
+        ${getBraceSvg()}
+        <div class="brace-caption">1024 байт</div>
+      </div>
+    </div>
+
+    <div class="scheme-block">
+      <div class="unit-main">1 МБ</div>
+      <div class="eq-sign">=</div>
+      <div class="brace-group">
+        <div class="squares-row">
+          <div class="byte-sq" style="background:#e0e7ff; border-color:#4f46e5; color:#1e1b4b;">1 КБ</div>
+          <span class="plus-sign">+</span>
+          <div class="byte-sq" style="background:#e0e7ff; border-color:#4f46e5; color:#1e1b4b;">1 КБ</div>
+          <span class="plus-sign">+</span>
+          <div class="byte-sq" style="background:#e0e7ff; border-color:#4f46e5; color:#1e1b4b;">1 КБ</div>
+          <span class="plus-sign">+ ... +</span>
+          <div class="byte-sq" style="background:#e0e7ff; border-color:#4f46e5; color:#1e1b4b;">1 КБ</div>
+        </div>
+        ${getBraceSvg()}
+        <div class="brace-caption">1024 КБ</div>
+      </div>
+    </div>
+  `;
+
+  container.appendChild(wrapper);
+}
+
+function renderStep() {
+  const stage = stages[currentStep];
+  document.getElementById('step-counter').innerText = `Задание ${currentStep + 1} из ${stages.length}`;
+  updateScoreHeader();
+  document.getElementById('progress').style.width = `${(currentStep / stages.length) * 100}%`;
+
+  document.getElementById('step-title').innerText = stage.title;
+  document.getElementById('step-desc').innerText = stage.desc;
+
+  const container = document.getElementById('tasks-list');
+  container.innerHTML = '';
+
+  document.getElementById('btn-check').style.display = 'inline-block';
+  document.getElementById('btn-next').style.display = 'none';
+
+  if (stage.type === 'visual-scheme') {
+    renderVisualSchemes(container);
+    stage.tasks.forEach((task, idx) => {
+      const row = document.createElement('div');
+      row.className = 'task-row';
+      const ansAttr = Array.isArray(task.answer) ? task.answer.join('|') : task.answer;
+      const width = task.width || '110px';
+
+      row.innerHTML = `
+        <span>${task.prefix}</span>
+        <input type="text" class="num-input step-input" style="width: ${width};" data-ans="${ansAttr}" placeholder="?">
+        <span>${task.suffix || ''}</span>
+        <span class="status-label" id="status-${idx}"></span>
+      `;
+      container.appendChild(row);
+    });
+  } else if (stage.type === 'drag-order') {
+    const list = document.createElement('div');
+    list.className = 'drag-list';
+    list.id = 'drag-list-container';
+
+    stage.items.forEach(item => {
+      const dItem = document.createElement('div');
+      dItem.className = 'drag-item';
+      dItem.draggable = true;
+      dItem.dataset.id = item.id;
+      dItem.innerHTML = `
+        <span>${item.label}</span>
+        <span class="drag-handle">☰</span>
+      `;
+      setupDragEvents(dItem, list);
+      list.appendChild(dItem);
+    });
+
+    container.appendChild(list);
+  } else if (stage.type === 'select') {
+    stage.tasks.forEach((task, idx) => {
+      const row = document.createElement('div');
+      row.className = 'task-row';
+      row.innerHTML = `
+        <span>${task.prefix}</span>
+        <select class="unit-select step-input" data-ans="${task.answer}">
+          <option value="">выбери...</option>
+          ${task.options.map(o => `<option value="${o}">${o}</option>`).join('')}
+        </select>
+        <span class="status-label" id="status-${idx}"></span>
+      `;
+      container.appendChild(row);
+    });
+  } else {
+    stage.tasks.forEach((task, idx) => {
+      const row = document.createElement('div');
+      row.className = 'task-row';
+      const ansAttr = Array.isArray(task.answer) ? task.answer.join('|') : task.answer;
+      const width = task.width || '110px';
+
+      row.innerHTML = `
+        <span>${task.prefix}</span>
+        <input type="text" class="num-input step-input" style="width: ${width};" data-ans="${ansAttr}" placeholder="?">
+        <span>${task.suffix || ''}</span>
+        <span class="status-label" id="status-${idx}"></span>
+      `;
+      container.appendChild(row);
+    });
+  }
+}
+
+let draggedItem = null;
+
+function setupDragEvents(item, container) {
+  item.addEventListener('dragstart', () => {
+    draggedItem = item;
+    setTimeout(() => item.classList.add('dragging'), 0);
+  });
+
+  item.addEventListener('dragend', () => {
+    item.classList.remove('dragging');
+    draggedItem = null;
+    container.querySelectorAll('.drag-item').forEach(el => el.classList.remove('over'));
+  });
+
+  item.addEventListener('dragover', (e) => {
+    e.preventDefault();
+    item.classList.add('over');
+  });
+
+  item.addEventListener('dragleave', () => {
+    item.classList.remove('over');
+  });
+
+  item.addEventListener('drop', (e) => {
+    e.preventDefault();
+    item.classList.remove('over');
+    if (draggedItem && draggedItem !== item) {
+      const allItems = [...container.querySelectorAll('.drag-item')];
+      const draggedPos = allItems.indexOf(draggedItem);
+      const droppedPos = allItems.indexOf(item);
+      if (draggedPos < droppedPos) {
+        item.after(draggedItem);
+      } else {
+        item.before(draggedItem);
+      }
+    }
+  });
+
+  item.addEventListener('click', () => {
+    if (item.classList.contains('correct') || item.classList.contains('wrong')) return;
+    const next = item.nextElementSibling;
+    if (next) container.insertBefore(next, item);
+    else container.insertBefore(item, container.firstChild);
+  });
+}
+
+function checkCurrentStep() {
+  const stage = stages[currentStep];
+  let stageErrors = 0;
+
+  if (stage.type === 'drag-order') {
+    const list = document.getElementById('drag-list-container');
+    const items = [...list.querySelectorAll('.drag-item')];
+
+    items.forEach(el => {
+      el.draggable = false;
+      el.style.cursor = 'default';
+    });
+
+    items.forEach((el, idx) => {
+      if (el.dataset.id === stage.correctOrder[idx]) {
+        el.classList.add('correct');
+      } else {
+        el.classList.add('wrong');
+        stageErrors++;
+      }
+    });
+  } else {
+    const inputs = document.querySelectorAll('.step-input');
+
+    inputs.forEach(el => {
+      const rawVal = el.value.trim().toLowerCase().replace(/\s+/g, '');
+      const validAnswers = el.dataset.ans.toLowerCase().split('|').map(a => a.replace(/\s+/g, ''));
+      const parentRow = el.closest('.task-row');
+      const statusLabel = parentRow.querySelector('.status-label');
+
+      el.disabled = true;
+
+      if (validAnswers.includes(rawVal)) {
+        el.classList.add('correct');
+        if (statusLabel) {
+          statusLabel.innerText = 'Верно';
+          statusLabel.className = 'status-label correct';
+        }
+      } else {
+        el.classList.add('wrong');
+        stageErrors++;
+        if (statusLabel) {
+          statusLabel.innerText = 'Неверно';
+          statusLabel.className = 'status-label wrong';
+        }
+      }
+    });
+  }
+
+  let assignedScore = 0;
+  if (stageErrors === 0) {
+    assignedScore = 1;
+  } else if (stageErrors === 1) {
+    assignedScore = 0.5;
+  } else {
+    assignedScore = 0;
+  }
+
+  taskStates[currentStep] = {
+    errors: stageErrors,
+    completed: true,
+    score: assignedScore
+  };
+
+  updateScoreHeader();
+
+  document.getElementById('btn-check').style.display = 'none';
+  document.getElementById('btn-next').style.display = 'inline-block';
+}
+
+function goToNextStep() {
+  currentStep++;
+  if (currentStep < stages.length) {
+    renderStep();
+  } else {
+    showResults();
+  }
+}
+
+function showResults() {
+  document.getElementById('quiz-screen').style.display = 'none';
+  const res = document.getElementById('result-screen');
+  res.style.display = 'block';
+
+  const total = calculateTotalScore();
+  const displayScore = Number.isInteger(total) ? total : total.toFixed(1);
+  document.getElementById('final-score').innerText = `${displayScore} / ${stages.length}`;
+
+  let perfectCount = 0;
+  let partialCount = 0;
+  taskStates.forEach(st => {
+    if (st.errors === 0) perfectCount++;
+    else if (st.errors === 1) partialCount++;
+  });
+
+  const msg = document.getElementById('final-message');
+  if (perfectCount === stages.length) {
+    msg.innerHTML = `Идеально! Все <strong>${stages.length}</strong> заданий выполнены без единой ошибки с первой попытки!`;
+  } else {
+    msg.innerHTML = `Заданий без ошибок: <strong>${perfectCount}</strong>, с 1 ошибкой: <strong>${partialCount}</strong>. Общий итог: <strong>${displayScore}</strong> из <strong>${stages.length}</strong>.`;
+  }
+
+  const badgesContainer = document.getElementById('results-badges');
+  badgesContainer.innerHTML = '';
+
+  taskStates.forEach((st, idx) => {
+    const badge = document.createElement('div');
+    let statusClass = 'wrong';
+
+    if (st.errors === 0) {
+      statusClass = 'correct';
+    } else if (st.errors === 1) {
+      statusClass = 'partial';
+    } else {
+      statusClass = 'wrong';
+    }
+
+    badge.className = `badge-item ${statusClass}`;
+    badge.innerText = `№${idx + 1}`;
+    badge.title = `Задание №${idx + 1}: ${st.score} б. (${st.errors} ош.)`;
+    badgesContainer.appendChild(badge);
+  });
+}
+
+function restart() {
+  document.getElementById('result-screen').style.display = 'none';
+  document.getElementById('theory-screen').style.display = 'block';
+}
+</script>
+</body>
+</html>
